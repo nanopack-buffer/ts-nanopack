@@ -6,7 +6,7 @@ A TypeScript implementation of the [NanoPack](https://github.com/poly-gui/nanopa
 
 - [Bun](https://bun.sh) >= 1.0.11
 
-## Generating Swift code
+## Generating TypeScript code
 
 `nanoc` supports generating TypeScript code from NanoPack schemas:
 
