@@ -3,10 +3,10 @@ class NanoBufReader {
 	private uint8View: Uint8Array
 	private textDecoder: TextDecoder
 
-	constructor(buffer: ArrayBuffer) {
+	constructor(data: Uint8Array) {
 		this.textDecoder = new TextDecoder("utf-8")
-		this.dataView = new DataView(buffer)
-		this.uint8View = new Uint8Array(buffer)
+		this.dataView = new DataView(data.buffer)
+		this.uint8View = data
 	}
 
 	public readTypeId(): number {

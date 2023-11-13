@@ -1,13 +1,8 @@
 import { describe, expect, it } from "bun:test"
 import { NanoBufReader } from "../reader.ts"
 
-function createArrayBuffer(bytes: number[]): ArrayBuffer {
-	const buf = new ArrayBuffer(bytes.length)
-	const view = new DataView(buf)
-	for (let i = 0; i < bytes.length; i++) {
-		view.setUint8(i, bytes[i])
-	}
-	return buf
+function createArrayBuffer(bytes: number[]): Uint8Array {
+	return new Uint8Array(bytes)
 }
 
 describe("NanoBuf Reader", () => {
