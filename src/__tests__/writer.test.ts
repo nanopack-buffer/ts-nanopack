@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { NanoBufWriter } from "../writer.ts"
+import { NanoBufWriter } from "../writer"
 
 describe("NanoBuf writer", () => {
 	it("should write the given type id at the beginning of the buffer in little endian format", () => {
