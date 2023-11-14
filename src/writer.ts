@@ -56,8 +56,10 @@ class NanoBufWriter {
 		this.dataView.setFloat64(offset, double, true)
 	}
 
-	public appendString(str: string) {
-		this.appendBytes(this.textEncoder.encode(str))
+	public appendString(str: string): number {
+		const bytes = this.textEncoder.encode(str)
+		this.appendBytes(bytes)
+		return bytes.byteLength
 	}
 
 	public appendBytes(bytes: Uint8Array) {

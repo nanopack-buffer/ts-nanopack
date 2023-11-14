@@ -80,10 +80,11 @@ describe("NanoBuf writer", () => {
 		writer.writeTypeId(8)
 		writer.writeFieldSize(0, -1)
 
-		writer.appendString("hello world")
+		const bytesWritten = writer.appendString("hello world")
 		expect([...new Uint8Array(writer.bytes)]).toEqual([
-			8, 0, 0, 0, 255, 255, 255, 255, 0x68, 0x65, 0x6C, 0x6C, 0x6F, 0x20, 0x77,
-			0x6F, 0x72, 0x6C, 0x64,
+			8, 0, 0, 0, 255, 255, 255, 255, 0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
+			0x6f, 0x72, 0x6c, 0x64,
 		])
+		expect(bytesWritten).toEqual(11)
 	})
 })
