@@ -11,7 +11,7 @@ class NanoBufWriter {
 
 	constructor(initialSizeInBytes: number) {
 		this.buffer = new ArrayBuffer(initialSizeInBytes, {
-			maxByteLength: 2 ^ 32,
+			maxByteLength: 1024 * 1024,
 		})
 		this.dataView = new DataView(this.buffer)
 		this.textEncoder = new TextEncoder("utf-8")
@@ -58,6 +58,13 @@ class NanoBufWriter {
 
 	public appendString(str: string): number {
 		const bytes = this.textEncoder.encode(str)
+		this.appendBytes(bytes)
+		return bytes.byteLength
+	}
+
+	public appendStringAndSize(str: string): number {
+		const bytes = this.textEncoder.encode(str)
+		this.appendInt32(bytes.byteLength)
 		this.appendBytes(bytes)
 		return bytes.byteLength
 	}

@@ -87,4 +87,17 @@ describe("NanoBuf writer", () => {
 		])
 		expect(bytesWritten).toEqual(11)
 	})
+
+	it("should append the given string and its byte length to the end of the buffer in UTF-8", () => {
+		const writer = new NanoBufWriter(1)
+		writer.writeTypeId(8)
+		writer.writeFieldSize(0, -1)
+
+		const bytesWritten = writer.appendStringAndSize("hello world")
+		expect([...new Uint8Array(writer.bytes)]).toEqual([
+			8, 0, 0, 0, 255, 255, 255, 255, 11, 0, 0, 0, 0x68, 0x65, 0x6c, 0x6c, 0x6f,
+			0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64,
+		])
+		expect(bytesWritten).toEqual(11)
+	})
 })
