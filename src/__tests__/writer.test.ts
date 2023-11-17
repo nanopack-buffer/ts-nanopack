@@ -5,13 +5,13 @@ describe("NanoBuf writer", () => {
 	it("should write the given type id at the beginning of the buffer in little endian format", () => {
 		const writer = new NanoBufWriter(1)
 		writer.writeTypeId(4)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([4, 0, 0, 0])
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
 	})
 
 	it("should write the given size of a field at the correct position in the buffer in little endian format", () => {
 		const writer = new NanoBufWriter(3)
 		writer.writeFieldSize(0, 8)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([0, 0, 0, 0, 8, 0, 0, 0])
+		expect([...writer.bytes]).toEqual([0, 0, 0, 0, 8, 0, 0, 0])
 	})
 
 	it("should append the given boolean to the end of the buffer", () => {
@@ -20,14 +20,10 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, 1)
 
 		writer.appendBoolean(true)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
-			4, 0, 0, 0, 1, 0, 0, 0, 1,
-		])
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0, 1, 0, 0, 0, 1])
 
 		writer.appendBoolean(false)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
-			4, 0, 0, 0, 1, 0, 0, 0, 1, 0,
-		])
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0, 1, 0, 0, 0, 1, 0])
 	})
 
 	it("should append the given int8 to the end of the buffer", () => {
@@ -36,14 +32,10 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, 1)
 
 		writer.appendInt8(78)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
-			10, 0, 0, 0, 1, 0, 0, 0, 78,
-		])
+		expect([...writer.bytes]).toEqual([10, 0, 0, 0, 1, 0, 0, 0, 78])
 
 		writer.appendInt8(-45)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
-			10, 0, 0, 0, 1, 0, 0, 0, 78, 0xd3,
-		])
+		expect([...writer.bytes]).toEqual([10, 0, 0, 0, 1, 0, 0, 0, 78, 0xd3])
 	})
 
 	it("should append the given int32 to the end of the buffer in little endian format", () => {
@@ -52,12 +44,12 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, -1)
 
 		writer.appendInt32(2345)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
+		expect([...writer.bytes]).toEqual([
 			8, 0, 0, 0, 255, 255, 255, 255, 0b00101001, 0b00001001, 0, 0,
 		])
 
 		writer.appendInt32(-128)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
+		expect([...writer.bytes]).toEqual([
 			8, 0, 0, 0, 255, 255, 255, 255, 0b00101001, 0b00001001, 0, 0, 128, 255,
 			255, 255,
 		])
@@ -69,7 +61,7 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, -1)
 
 		writer.appendDouble(9.8)
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
+		expect([...writer.bytes]).toEqual([
 			8, 0, 0, 0, 255, 255, 255, 255, 0x9a, 0x99, 0x99, 0x99, 0x99, 0x99, 0x23,
 			0x40,
 		])
@@ -81,7 +73,7 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, -1)
 
 		const bytesWritten = writer.appendString("hello world")
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
+		expect([...writer.bytes]).toEqual([
 			8, 0, 0, 0, 255, 255, 255, 255, 0x68, 0x65, 0x6c, 0x6c, 0x6f, 0x20, 0x77,
 			0x6f, 0x72, 0x6c, 0x64,
 		])
@@ -94,7 +86,7 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, -1)
 
 		const bytesWritten = writer.appendStringAndSize("hello world")
-		expect([...new Uint8Array(writer.bytes)]).toEqual([
+		expect([...writer.bytes]).toEqual([
 			8, 0, 0, 0, 255, 255, 255, 255, 11, 0, 0, 0, 0x68, 0x65, 0x6c, 0x6c, 0x6f,
 			0x20, 0x77, 0x6f, 0x72, 0x6c, 0x64,
 		])

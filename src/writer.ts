@@ -17,8 +17,8 @@ class NanoBufWriter {
 		this.textEncoder = new TextEncoder("utf-8")
 	}
 
-	public get bytes(): ArrayBuffer {
-		return this.buffer.slice(0, this.endPtr)
+	public get bytes(): Uint8Array {
+		return new Uint8Array(this.buffer, 0, this.endPtr)
 	}
 
 	public writeTypeId(typeId: number) {
