@@ -3,19 +3,19 @@ import { NanoBufWriter } from "../writer"
 
 describe("NanoBuf writer", () => {
 	it("should write the given type id at the beginning of the buffer in little endian format", () => {
-		const writer = new NanoBufWriter(1)
+		const writer = new NanoBufWriter(4)
 		writer.writeTypeId(4)
 		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
 	})
 
 	it("should write the given size of a field at the correct position in the buffer in little endian format", () => {
-		const writer = new NanoBufWriter(3)
+		const writer = new NanoBufWriter(8)
 		writer.writeFieldSize(0, 8)
 		expect([...writer.bytes]).toEqual([0, 0, 0, 0, 8, 0, 0, 0])
 	})
 
 	it("should append the given boolean to the end of the buffer", () => {
-		const writer = new NanoBufWriter(10)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(4)
 		writer.writeFieldSize(0, 1)
 
@@ -27,7 +27,7 @@ describe("NanoBuf writer", () => {
 	})
 
 	it("should append the given int8 to the end of the buffer", () => {
-		const writer = new NanoBufWriter(10)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(10)
 		writer.writeFieldSize(0, 1)
 
@@ -39,7 +39,7 @@ describe("NanoBuf writer", () => {
 	})
 
 	it("should append the given int32 to the end of the buffer in little endian format", () => {
-		const writer = new NanoBufWriter(10)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(8)
 		writer.writeFieldSize(0, -1)
 
@@ -56,7 +56,7 @@ describe("NanoBuf writer", () => {
 	})
 
 	it("should append the given double to the end of the buffer in little endian format", () => {
-		const writer = new NanoBufWriter(10)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(8)
 		writer.writeFieldSize(0, -1)
 
@@ -68,7 +68,7 @@ describe("NanoBuf writer", () => {
 	})
 
 	it("should append the given string to the end of the buffer in UTF-8", () => {
-		const writer = new NanoBufWriter(10)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(8)
 		writer.writeFieldSize(0, -1)
 
@@ -81,7 +81,7 @@ describe("NanoBuf writer", () => {
 	})
 
 	it("should append the given string and its byte length to the end of the buffer in UTF-8", () => {
-		const writer = new NanoBufWriter(1)
+		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(8)
 		writer.writeFieldSize(0, -1)
 

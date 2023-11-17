@@ -10,6 +10,7 @@ class NanoBufWriter {
 	private endPtr = -1
 
 	constructor(initialSizeInBytes: number) {
+		this.endPtr = initialSizeInBytes
 		this.buffer = new ArrayBuffer(initialSizeInBytes, {
 			maxByteLength: 1024 * 1024,
 		})
@@ -22,15 +23,11 @@ class NanoBufWriter {
 	}
 
 	public writeTypeId(typeId: number) {
-		if (this.endPtr < 0) {
-			this.moveEndPtrAndResizeIfNecessary(4)
-		}
 		this.dataView.setInt32(0, typeId, true)
 	}
 
 	public writeFieldSize(fieldNumber: number, size: number) {
 		const offset = 4 * (fieldNumber + 1)
-		this.moveEndPtrAndResizeIfNecessary(offset + 4)
 		this.dataView.setInt32(offset, size, true)
 	}
 
