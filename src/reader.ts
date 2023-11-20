@@ -1,42 +1,43 @@
 class NanoBufReader {
-	private dataView: DataView
-	private uint8View: Uint8Array
+	private buffer: Uint8Array
 	private textDecoder: TextDecoder
 
 	constructor(data: Uint8Array) {
 		this.textDecoder = new TextDecoder("utf-8")
-		this.dataView = new DataView(data.buffer)
-		this.uint8View = data
+		this.buffer = data
 	}
 
 	public readTypeId(): number {
-		return this.dataView.getInt32(0, true)
+		return this.readInt32(0)
 	}
 
 	public readFieldSize(fieldNumber: number): number {
-		return this.dataView.getInt32(4 * (fieldNumber + 1), true)
+		return this.readInt32(4 * (fieldNumber + 1))
 	}
 
 	public readBoolean(offset: number): boolean {
-		return this.dataView.getUint8(offset) === 1
+		return this.buffer[offset] === 1
 	}
 
 	public readInt8(offset: number): number {
-		return this.dataView.getInt8(offset)
+		const b = this.buffer[offset]
+		return b < 128 ? b : -(256 - b)
 	}
 
 	public readInt32(offset: number): number {
-		return this.dataView.getInt32(offset, true)
+		return (
+			this.buffer[offset] |
+			(this.buffer[offset + 1] << 8) |
+			((this.buffer[offset + 2] << 16) | (this.buffer[offset + 3] << 24))
+		)
 	}
 
 	public readDouble(offset: number): number {
-		return this.dataView.getFloat64(offset, true)
+		return new Float64Array(this.buffer.subarray(offset, offset + 8)).at(0)!
 	}
 
 	public readString(offset: number, size: number): string {
-		return this.textDecoder.decode(
-			this.uint8View.subarray(offset, offset + size),
-		)
+		return this.textDecoder.decode(this.buffer.subarray(offset, offset + size))
 	}
 }
 
