@@ -1,7 +1,5 @@
 class NanoBufWriter {
-	private readonly buffer: ArrayBuffer
-	private dataView: DataView
-	private textEncoder: TextEncoder
+	private buffer: Buffer
 
 	/**
 	 * The index at which new byte should be stored at.
@@ -11,24 +9,19 @@ class NanoBufWriter {
 
 	constructor(initialSizeInBytes: number) {
 		this.endPtr = initialSizeInBytes
-		this.buffer = new ArrayBuffer(initialSizeInBytes, {
-			maxByteLength: 1024 * 1024,
-		})
-		this.dataView = new DataView(this.buffer)
-		this.textEncoder = new TextEncoder("utf-8")
+		this.buffer = Buffer.allocUnsafe(initialSizeInBytes)
 	}
 
 	public get bytes(): Uint8Array {
-		return new Uint8Array(this.buffer, 0, this.endPtr)
+		return this.buffer.subarray(0, this.endPtr)
 	}
 
 	public writeTypeId(typeId: number) {
-		this.dataView.setInt32(0, typeId, true)
-}
+		this.buffer.writeInt32LE(typeId, 0)
+	}
 
 	public writeFieldSize(fieldNumber: number, size: number) {
-		const offset = 4 * (fieldNumber + 1)
-		this.dataView.setInt32(offset, size, true)
+		this.buffer.writeInt32LE(size, 4 * (fieldNumber + 1))
 	}
 
 	public appendBoolean(bool: boolean) {
@@ -38,47 +31,52 @@ class NanoBufWriter {
 	public appendInt8(int8: number) {
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + 1)
-		this.dataView.setInt8(offset, int8)
+		this.buffer.writeInt8(int8, offset)
 	}
 
 	public appendInt32(int32: number) {
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + 4)
-		this.dataView.setInt32(offset, int32, true)
+		this.buffer.writeInt32LE(int32, offset)
 	}
 
 	public appendDouble(double: number) {
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + 8)
-		this.dataView.setFloat64(offset, double, true)
+		this.buffer.writeDoubleLE(double, offset)
 	}
 
 	public appendString(str: string): number {
-		const bytes = this.textEncoder.encode(str)
-		this.appendBytes(bytes)
-		return bytes.byteLength
+		const buf = Buffer.from(str, "utf-8")
+		const offset = this.endPtr
+		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
+		this.buffer.set(buf, offset)
+		return buf.byteLength
 	}
 
 	public appendStringAndSize(str: string): number {
-		const bytes = this.textEncoder.encode(str)
-		this.appendInt32(bytes.byteLength)
-		this.appendBytes(bytes)
-		return bytes.byteLength
+		const buf = Buffer.from(str, "utf-8")
+		this.appendInt32(buf.byteLength)
+		const offset = this.endPtr
+		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
+		this.buffer.set(buf, offset)
+		return buf.byteLength
 	}
 
 	public appendBytes(bytes: Uint8Array) {
 		const offset = this.endPtr
 		const byteLength = bytes.byteLength
 		this.moveEndPtrAndResizeIfNecessary(offset + byteLength)
-		for (let i = 0; i < byteLength; i++) {
-			this.dataView.setUint8(offset + i, bytes.at(i)!)
-		}
+		this.buffer.set(bytes, offset)
 	}
 
 	private moveEndPtrAndResizeIfNecessary(endPtr: number) {
-		if (endPtr >= this.buffer.byteLength) {
+		const currentLength = this.buffer.byteLength
+		if (endPtr >= currentLength) {
 			const difference = endPtr - this.buffer.byteLength
-			this.buffer.resize(this.buffer.byteLength * 2 + difference)
+			const newBuf = Buffer.allocUnsafe(this.buffer.byteLength * 2 + difference)
+			newBuf.set(this.buffer, 0)
+			this.buffer = newBuf
 		}
 		this.endPtr = endPtr
 	}
