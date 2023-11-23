@@ -50,7 +50,7 @@ class NanoBufWriter {
 		const strByteLength = Buffer.byteLength(str, "utf-8")
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + strByteLength)
-		this.buffer.write(str, "utf-8")
+		this.buffer.write(str, offset, "utf-8")
 		return strByteLength
 	}
 
@@ -59,7 +59,7 @@ class NanoBufWriter {
 		this.appendInt32(strByteLength)
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + strByteLength)
-		this.buffer.write(str, "utf-8")
+		this.buffer.write(str, offset, "utf-8")
 		return strByteLength
 	}
 
