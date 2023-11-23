@@ -47,20 +47,20 @@ class NanoBufWriter {
 	}
 
 	public appendString(str: string): number {
-		const buf = Buffer.from(str, "utf-8")
+		const strByteLength = Buffer.byteLength(str, "utf-8")
 		const offset = this.endPtr
-		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
-		this.buffer.copy(buf, offset)
-		return buf.byteLength
+		this.moveEndPtrAndResizeIfNecessary(offset + strByteLength)
+		this.buffer.write(str, "utf-8")
+		return strByteLength
 	}
 
 	public appendStringAndSize(str: string): number {
-		const buf = Buffer.from(str, "utf-8")
-		this.appendInt32(buf.byteLength)
+		const strByteLength = Buffer.byteLength(str, "utf-8")
+		this.appendInt32(strByteLength)
 		const offset = this.endPtr
-		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
-		this.buffer.copy(buf, offset)
-		return buf.byteLength
+		this.moveEndPtrAndResizeIfNecessary(offset + strByteLength)
+		this.buffer.write(str, "utf-8")
+		return strByteLength
 	}
 
 	public appendBytes(bytes: Uint8Array) {
