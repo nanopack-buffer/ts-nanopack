@@ -50,7 +50,7 @@ class NanoBufWriter {
 		const buf = Buffer.from(str, "utf-8")
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
-		this.buffer.set(buf, offset)
+		this.buffer.copy(buf, offset)
 		return buf.byteLength
 	}
 
@@ -59,7 +59,7 @@ class NanoBufWriter {
 		this.appendInt32(buf.byteLength)
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + buf.byteLength)
-		this.buffer.set(buf, offset)
+		this.buffer.copy(buf, offset)
 		return buf.byteLength
 	}
 
@@ -67,7 +67,7 @@ class NanoBufWriter {
 		const offset = this.endPtr
 		const byteLength = bytes.byteLength
 		this.moveEndPtrAndResizeIfNecessary(offset + byteLength)
-		this.buffer.set(bytes, offset)
+		this.buffer.copy(bytes, offset)
 	}
 
 	private moveEndPtrAndResizeIfNecessary(endPtr: number) {
@@ -75,7 +75,7 @@ class NanoBufWriter {
 		if (endPtr >= currentLength) {
 			const difference = endPtr - this.buffer.byteLength
 			const newBuf = Buffer.allocUnsafe(this.buffer.byteLength * 2 + difference)
-			newBuf.set(this.buffer, 0)
+			this.buffer.copy(newBuf)
 			this.buffer = newBuf
 		}
 		this.endPtr = endPtr
