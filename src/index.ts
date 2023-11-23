@@ -1,2 +1,2 @@
-export { NanoBufReader } from "./reader"
-export { NanoBufWriter } from "./writer"
+export { NanoBufReader } from "./reader.js"
+export { NanoBufWriter } from "./writer.js"

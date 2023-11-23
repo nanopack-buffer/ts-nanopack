@@ -24,7 +24,7 @@ class NanoBufWriter {
 
 	public writeTypeId(typeId: number) {
 		this.dataView.setInt32(0, typeId, true)
-	}
+}
 
 	public writeFieldSize(fieldNumber: number, size: number) {
 		const offset = 4 * (fieldNumber + 1)
