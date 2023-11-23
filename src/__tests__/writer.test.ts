@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { NanoBufWriter } from "../writer"
+import { NanoBufWriter } from "../writer.js"
 
 describe("NanoBuf writer", () => {
 	it("should write the given type id at the beginning of the buffer in little endian format", () => {
@@ -10,8 +10,9 @@ describe("NanoBuf writer", () => {
 
 	it("should write the given size of a field at the correct position in the buffer in little endian format", () => {
 		const writer = new NanoBufWriter(8)
+		writer.writeTypeId(1)
 		writer.writeFieldSize(0, 8)
-		expect([...writer.bytes]).toEqual([0, 0, 0, 0, 8, 0, 0, 0])
+		expect([...writer.bytes]).toEqual([1, 0, 0, 0, 8, 0, 0, 0])
 	})
 
 	it("should append the given boolean to the end of the buffer", () => {

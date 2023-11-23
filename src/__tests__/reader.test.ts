@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test"
-import { NanoBufReader } from "../reader"
+import { NanoBufReader } from "../reader.js"
 
 function createArrayBuffer(bytes: number[]): Uint8Array {
 	return new Uint8Array(bytes)
