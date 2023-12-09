@@ -25,6 +25,10 @@ class NanoBufReader {
 		return this.buffer.readInt32LE(offset)
 	}
 
+	public readInt64(offset: number): bigint {
+		return this.buffer.readBigInt64LE(offset)
+	}
+
 	public readDouble(offset: number): number {
 		return this.buffer.readDoubleLE(offset)
 	}
