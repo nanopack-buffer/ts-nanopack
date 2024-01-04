@@ -1,7 +1,9 @@
 interface NanoPackMessage {
 	get typeId(): number
 
-	bytes(withLengthPrefix?: boolean): Uint8Array
+	bytesWithLengthPrefix(): Uint8Array
+
+	bytes(): Uint8Array
 }
 
 export type { NanoPackMessage }
