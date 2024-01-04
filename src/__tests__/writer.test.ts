@@ -2,32 +2,16 @@ import { describe, expect, it } from "bun:test"
 import { NanoBufWriter } from "../writer.js"
 
 describe("NanoBuf writer", () => {
-	describe("should write the given type id in little endian format", () => {
-		it("at the beginning of the buffer", () => {
-			const writer = new NanoBufWriter(4)
-			writer.writeTypeId(4)
-			expect([...writer.bytes]).toEqual([4, 0, 0, 0])
-		})
-
-		it("at the specified offset", () => {
-			const writer = new NanoBufWriter(5)
-			writer.writeTypeId(4, 1)
-			expect([...writer.bytes]).toEqual([0, 4, 0, 0, 0])
-		})
+	it("should write the given type id in little endian format at the beginning of the buffer", () => {
+		const writer = new NanoBufWriter(4)
+		writer.writeTypeId(4)
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
 	})
 
-	describe("should write the given length in little endian format", () => {
-		it("at the beginning of the buffer", () => {
-			const writer = new NanoBufWriter(4)
-			writer.writeLength(4)
-			expect([...writer.bytes]).toEqual([4, 0, 0, 0])
-		})
-
-		it("at the specified offset", () => {
-			const writer = new NanoBufWriter(5)
-			writer.writeLength(4, 1)
-			expect([...writer.bytes]).toEqual([0, 4, 0, 0, 0])
-		})
+	it("should write the given length in little endian format at the beginning of the buffer", () => {
+		const writer = new NanoBufWriter(4, true)
+		writer.writeLengthPrefix(4)
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
 	})
 
 	it("should write the given size of a field at the correct position in the buffer in little endian format", () => {
@@ -123,5 +107,16 @@ describe("NanoBuf writer", () => {
 		writer.writeFieldSize(0, 4)
 		writer.appendInt32(123)
 		expect(writer.currentSize).toEqual(12)
+	})
+
+	it("should support length prefixing", () => {
+		const writer = new NanoBufWriter(12, true)
+		writer.writeTypeId(10)
+		writer.writeFieldSize(0, 4)
+		writer.appendInt32(123)
+		writer.writeLengthPrefix(12)
+		expect([...writer.bytes]).toEqual([
+			12, 0, 0, 0, 10, 0, 0, 0, 4, 0, 0, 0, 123, 0, 0, 0,
+		])
 	})
 })

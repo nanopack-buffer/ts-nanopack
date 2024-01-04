@@ -1,15 +1,20 @@
 class NanoBufWriter {
 	private buffer: Buffer
 
+	private messageOffset = 0
+
 	/**
 	 * The index at which new byte should be stored at.
 	 * @private
 	 */
 	private endPtr = -1
 
-	constructor(initialSizeInBytes: number) {
+	constructor(initialSizeInBytes: number, lengthPrefix: boolean = false) {
 		this.endPtr = initialSizeInBytes
 		this.buffer = Buffer.allocUnsafe(initialSizeInBytes)
+		if (lengthPrefix) {
+			this.messageOffset = 4
+		}
 	}
 
 	public get currentSize() {
@@ -20,16 +25,16 @@ class NanoBufWriter {
 		return this.buffer.subarray(0, this.endPtr)
 	}
 
-	public writeTypeId(typeId: number, offset: number = 0) {
-		this.buffer.writeInt32LE(typeId, offset)
+	public writeTypeId(typeId: number) {
+		this.buffer.writeInt32LE(typeId, this.messageOffset)
 	}
 
-	public writeLength(length: number, offset: number = 0) {
-		this.buffer.writeInt32LE(length, offset)
+	public writeLengthPrefix(length: number) {
+		this.buffer.writeInt32LE(length, 0)
 	}
 
 	public writeFieldSize(fieldNumber: number, size: number) {
-		this.buffer.writeInt32LE(size, 4 * (fieldNumber + 1))
+		this.buffer.writeInt32LE(size, this.messageOffset + 4 * (fieldNumber + 1))
 	}
 
 	public appendBoolean(bool: boolean) {
