@@ -12,6 +12,10 @@ class NanoBufWriter {
 		this.buffer = Buffer.allocUnsafe(initialSizeInBytes)
 	}
 
+	public get currentSize() {
+		return this.endPtr
+	}
+
 	public get bytes(): Uint8Array {
 		return this.buffer.subarray(0, this.endPtr)
 	}

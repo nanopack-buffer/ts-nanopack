@@ -115,4 +115,13 @@ describe("NanoBuf writer", () => {
 		])
 		expect(bytesWritten).toEqual(11)
 	})
+
+	it("should expose the current number of bytes in the writer buffer", () => {
+		const writer = new NanoBufWriter(8)
+		expect(writer.currentSize).toEqual(8)
+		writer.writeTypeId(8)
+		writer.writeFieldSize(0, 4)
+		writer.appendInt32(123)
+		expect(writer.currentSize).toEqual(12)
+	})
 })
