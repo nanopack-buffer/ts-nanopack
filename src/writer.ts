@@ -16,8 +16,12 @@ class NanoBufWriter {
 		return this.buffer.subarray(0, this.endPtr)
 	}
 
-	public writeTypeId(typeId: number) {
-		this.buffer.writeInt32LE(typeId, 0)
+	public writeTypeId(typeId: number, offset: number = 0) {
+		this.buffer.writeInt32LE(typeId, offset)
+	}
+
+	public writeLength(length: number, offset: number = 0) {
+		this.buffer.writeInt32LE(length, offset)
 	}
 
 	public writeFieldSize(fieldNumber: number, size: number) {
