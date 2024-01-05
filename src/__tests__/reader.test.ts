@@ -55,4 +55,12 @@ describe("NanoBuf Reader", () => {
 		const reader = new NanoBufReader(testBuf)
 		expect(reader.readString(2, 10)).toEqual("bread 👍")
 	})
+
+	it("should expose the backing buffer as a getter", () => {
+		const testBuf = createArrayBuffer([
+			67, 89, 0x62, 0x72, 0x65, 0x61, 0x64, 0x20, 0xf0, 0x9f, 0x91, 0x8d,
+		])
+		const reader = new NanoBufReader(testBuf)
+		expect(reader.buffer.buffer).toEqual(testBuf.buffer)
+	})
 })

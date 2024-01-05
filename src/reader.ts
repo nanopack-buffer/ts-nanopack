@@ -1,40 +1,44 @@
 class NanoBufReader {
-	private buffer: Buffer
+	private readonly _buffer: Buffer
 
 	constructor(data: Uint8Array) {
-		this.buffer = Buffer.from(data)
+		this._buffer = Buffer.from(data)
+	}
+
+	public get buffer() {
+		return this._buffer
 	}
 
 	public readTypeId(): number {
-		return this.buffer.readInt32LE(0)
+		return this._buffer.readInt32LE(0)
 	}
 
 	public readFieldSize(fieldNumber: number): number {
-		return this.buffer.readInt32LE(4 * (fieldNumber + 1))
+		return this._buffer.readInt32LE(4 * (fieldNumber + 1))
 	}
 
 	public readBoolean(offset: number): boolean {
-		return this.buffer.readInt8(offset) === 1
+		return this._buffer.readInt8(offset) === 1
 	}
 
 	public readInt8(offset: number): number {
-		return this.buffer.readInt8(offset)
+		return this._buffer.readInt8(offset)
 	}
 
 	public readInt32(offset: number): number {
-		return this.buffer.readInt32LE(offset)
+		return this._buffer.readInt32LE(offset)
 	}
 
 	public readInt64(offset: number): bigint {
-		return this.buffer.readBigInt64LE(offset)
+		return this._buffer.readBigInt64LE(offset)
 	}
 
 	public readDouble(offset: number): number {
-		return this.buffer.readDoubleLE(offset)
+		return this._buffer.readDoubleLE(offset)
 	}
 
 	public readString(offset: number, size: number): string {
-		return this.buffer.toString("utf-8", offset, offset + size)
+		return this._buffer.toString("utf-8", offset, offset + size)
 	}
 }
 
