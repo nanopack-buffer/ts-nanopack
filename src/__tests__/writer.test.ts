@@ -100,6 +100,16 @@ describe("NanoBuf writer", () => {
 		expect(bytesWritten).toEqual(11)
 	})
 
+	it("should append the given bytes to the end of the buffer", () => {
+		const writer = new NanoBufWriter(0)
+		writer.appendInt8(1)
+		const bytes = new Uint8Array([8, 0, 0, 0, 255, 255, 255, 255, 0x9a, 0x99])
+		writer.appendBytes(bytes)
+		expect([...writer.bytes]).toEqual([
+			1, 8, 0, 0, 0, 255, 255, 255, 255, 0x9a, 0x99,
+		])
+	})
+
 	it("should expose the current number of bytes in the writer buffer", () => {
 		const writer = new NanoBufWriter(8)
 		expect(writer.currentSize).toEqual(8)

@@ -86,7 +86,7 @@ class NanoBufWriter {
 		const offset = this.endPtr
 		const byteLength = bytes.byteLength
 		this.moveEndPtrAndResizeIfNecessary(offset + byteLength)
-		this.buffer.copy(bytes, offset)
+		this.buffer.set(bytes, offset)
 	}
 
 	private moveEndPtrAndResizeIfNecessary(endPtr: number) {
