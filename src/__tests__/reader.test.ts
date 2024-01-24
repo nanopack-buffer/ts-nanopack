@@ -12,6 +12,12 @@ describe("NanoBuf Reader", () => {
 		expect(reader.readTypeId()).toEqual(1)
 	})
 
+	it("should provide access to the backing buffer", () => {
+		const testBuf = createArrayBuffer([1, 0, 0, 0, 2, 3, 9, 6])
+		const reader = new NanoBufReader(testBuf)
+		expect([...reader.bytes]).toEqual([1, 0, 0, 0, 2, 3, 9, 6])
+	})
+
 	it("should read sizes of fields from a NanoPack-formatted buffer", () => {
 		const testBuf = createArrayBuffer([1, 0, 0, 0, 2, 3, 0, 0, 9, 0, 0, 0])
 		const reader = new NanoBufReader(testBuf)

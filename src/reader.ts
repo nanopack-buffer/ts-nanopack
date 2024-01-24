@@ -5,6 +5,10 @@ class NanoBufReader {
 		this.buffer = Buffer.from(data)
 	}
 
+	public get bytes() {
+		return this.buffer
+	}
+
 	/**
 	 * Creates a new instance of {@link NanoBufReader} that can only read a portion of the buffer of this reader.
 	 * From the created {@link NanoBufReader}'s point-of-view, the zero index will be the given start index, and the last index the given end index.
