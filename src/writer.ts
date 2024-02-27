@@ -26,7 +26,7 @@ class NanoBufWriter {
 	}
 
 	public writeTypeId(typeId: number) {
-		this.buffer.writeInt32LE(typeId, this.messageOffset)
+		this.buffer.writeUInt32LE(typeId, this.messageOffset)
 	}
 
 	public writeLengthPrefix(length: number) {

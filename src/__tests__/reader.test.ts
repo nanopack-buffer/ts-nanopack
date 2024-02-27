@@ -46,6 +46,39 @@ describe("NanoBuf Reader", () => {
 		expect(reader.readInt32(1)).toEqual(-2147483647)
 	})
 
+	it("should read an int64 at the specified offset", () => {
+		const testBuf = createArrayBuffer([
+			0, 0, 0, 0, 0, 0, 0, 0, 128, 4, 5, 0, 0, 0, 0, 0,
+		])
+		const reader = new NanoBufReader(testBuf)
+		expect(reader.readInt64(1)).toEqual(-9223372036854775808n)
+		expect(reader.readInt64(8)).toEqual(328832n)
+	})
+
+	it("should read a uint8 at the specified offset", () => {
+		const testBuf = createArrayBuffer([0, 245, 96])
+		const reader = new NanoBufReader(testBuf)
+		expect(reader.readUint8(0)).toEqual(0)
+		expect(reader.readUint8(1)).toEqual(245)
+		expect(reader.readUint8(2)).toEqual(96)
+	})
+
+	it("should read a uint32 at the specified offset", () => {
+		const testBuf = createArrayBuffer([255, 255, 255, 255, 128, 4, 5, 0, 0])
+		const reader = new NanoBufReader(testBuf)
+		expect(reader.readUint32(0)).toEqual(4294967295)
+		expect(reader.readUint32(5)).toEqual(1284)
+	})
+
+	it("should read a uint64 at the specified offset", () => {
+		const testBuf = createArrayBuffer([
+			255, 255, 255, 255, 255, 255, 255, 255, 128, 4, 5, 0, 0, 0, 0, 0,
+		])
+		const reader = new NanoBufReader(testBuf)
+		expect(reader.readUint64(0)).toEqual(18446744073709551615n)
+		expect(reader.readUint64(8)).toEqual(328832n)
+	})
+
 	it("should read a double at the specified offset", () => {
 		const testBuf = createArrayBuffer([
 			0, 9, 0x29, 0x5c, 0x8f, 0xc2, 0xf5, 0x28, 0x1d, 0x40,

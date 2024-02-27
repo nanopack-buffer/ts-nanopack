@@ -34,7 +34,7 @@ class NanoBufReader {
 	}
 
 	public readTypeId(): number {
-		return this.buffer.readInt32LE(0)
+		return this.buffer.readUint32LE(0)
 	}
 
 	public readFieldSize(fieldNumber: number): number {
@@ -49,12 +49,24 @@ class NanoBufReader {
 		return this.buffer.readInt8(offset)
 	}
 
+	public readUint8(offset: number): number {
+		return this.buffer.readUint8(offset)
+	}
+
 	public readInt32(offset: number): number {
 		return this.buffer.readInt32LE(offset)
 	}
 
+	public readUint32(offset: number): number {
+		return this.buffer.readUint32LE(offset)
+	}
+
 	public readInt64(offset: number): bigint {
 		return this.buffer.readBigInt64LE(offset)
+	}
+
+	public readUint64(offset: number): bigint {
+		return this.buffer.readBigUint64LE(offset)
 	}
 
 	public readDouble(offset: number): number {
