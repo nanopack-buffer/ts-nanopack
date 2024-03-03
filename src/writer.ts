@@ -47,16 +47,34 @@ class NanoBufWriter {
 		this.buffer.writeInt8(int8, offset)
 	}
 
+	public appendUint8(uint8: number) {
+		const offset = this.endPtr
+		this.moveEndPtrAndResizeIfNecessary(offset + 1)
+		this.buffer.writeUint8(uint8, offset)
+	}
+
 	public appendInt32(int32: number) {
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + 4)
 		this.buffer.writeInt32LE(int32, offset)
 	}
 
+	public appendUint32(uint32: number) {
+		const offset = this.endPtr
+		this.moveEndPtrAndResizeIfNecessary(offset + 4)
+		this.buffer.writeUInt32LE(uint32, offset)
+	}
+
 	public appendInt64(int64: bigint) {
 		const offset = this.endPtr
 		this.moveEndPtrAndResizeIfNecessary(offset + 8)
 		this.buffer.writeBigInt64LE(int64, offset)
+	}
+
+	public appendUint64(uint64: bigint) {
+		const offset = this.endPtr
+		this.moveEndPtrAndResizeIfNecessary(offset + 8)
+		this.buffer.writeBigUInt64LE(uint64, offset)
 	}
 
 	public appendDouble(double: number) {

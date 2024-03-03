@@ -45,6 +45,18 @@ describe("NanoBuf writer", () => {
 		expect([...writer.bytes]).toEqual([10, 0, 0, 0, 1, 0, 0, 0, 78, 0xd3])
 	})
 
+	it("should append the given uint8 to the end of the buffer", () => {
+		const writer = new NanoBufWriter(8)
+		writer.writeTypeId(10)
+		writer.writeFieldSize(0, 1)
+
+		writer.appendUint8(78)
+		expect([...writer.bytes]).toEqual([10, 0, 0, 0, 1, 0, 0, 0, 78])
+
+		writer.appendUint8(211)
+		expect([...writer.bytes]).toEqual([10, 0, 0, 0, 1, 0, 0, 0, 78, 211])
+	})
+
 	it("should append the given int32 to the end of the buffer in little endian format", () => {
 		const writer = new NanoBufWriter(8)
 		writer.writeTypeId(8)
@@ -52,13 +64,49 @@ describe("NanoBuf writer", () => {
 
 		writer.appendInt32(2345)
 		expect([...writer.bytes]).toEqual([
-			8, 0, 0, 0, 255, 255, 255, 255, 0b00101001, 0b00001001, 0, 0,
+			8, 0, 0, 0, 255, 255, 255, 255, 41, 9, 0, 0,
 		])
 
 		writer.appendInt32(-128)
 		expect([...writer.bytes]).toEqual([
-			8, 0, 0, 0, 255, 255, 255, 255, 0b00101001, 0b00001001, 0, 0, 128, 255,
-			255, 255,
+			8, 0, 0, 0, 255, 255, 255, 255, 41, 9, 0, 0, 128, 255, 255, 255,
+		])
+	})
+
+	it("should append the given uint32 to the end of the buffer in little endian format", () => {
+		const writer = new NanoBufWriter(8)
+		writer.writeTypeId(8)
+		writer.writeFieldSize(0, -1)
+
+		writer.appendUint32(2345)
+		expect([...writer.bytes]).toEqual([
+			8, 0, 0, 0, 255, 255, 255, 255, 41, 9, 0, 0,
+		])
+
+		writer.appendInt32(4294967295)
+		expect([...writer.bytes]).toEqual([
+			8, 0, 0, 0, 255, 255, 255, 255, 41, 9, 0, 0, 255, 255, 255, 255,
+		])
+	})
+
+	it("should append the given int64 to the end of the buffer in little endian format", () => {
+		const writer = new NanoBufWriter(0)
+		writer.appendInt64(12345678901234567890n)
+		expect([...writer.bytes]).toEqual([
+			0xd2, 0x0a, 0x1f, 0xeb, 0x8c, 0xa9, 0x54, 0xab,
+		])
+		writer.appendInt64(-92132131589n)
+		expect([...writer.bytes]).toEqual([
+			0xd2, 0x0a, 0x1f, 0xeb, 0x8c, 0xa9, 0x54, 0xab, 0xfb, 0x3c, 0x7f, 0x8c,
+			0xea, 0xff, 0xff, 0xff,
+		])
+	})
+
+	it("should append the given uint64 to the end of the buffer in little endian format", () => {
+		const writer = new NanoBufWriter(0)
+		writer.appendInt64(18446744073709551615n)
+		expect([...writer.bytes]).toEqual([
+			0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
 		])
 	})
 
