@@ -1,9 +1,11 @@
+import type { NanoBufWriter } from "./writer.js"
+
 interface NanoPackMessage {
 	get typeId(): number
 
 	get headerSize(): number
 
-	bytesWithLengthPrefix(): Uint8Array
+	writeTo(writer: NanoBufWriter): void
 
 	bytes(): Uint8Array
 }
