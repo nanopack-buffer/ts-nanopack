@@ -8,10 +8,11 @@ describe("NanoBuf writer", () => {
 		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
 	})
 
-	it("should write the given length in little endian format at the beginning of the buffer", () => {
-		const writer = new NanoBufWriter(4, true)
-		writer.writeLengthPrefix(4)
-		expect([...writer.bytes]).toEqual([4, 0, 0, 0])
+	it("should write the given type id in little endian format at the given offset", () => {
+		const writer = new NanoBufWriter(8)
+		writer.writeTypeId(3)
+		writer.writeTypeId(4, 4)
+		expect([...writer.bytes]).toEqual([3, 0, 0, 0, 4, 0, 0, 0])
 	})
 
 	it("should write the given size of a field at the correct position in the buffer in little endian format", () => {
@@ -19,6 +20,14 @@ describe("NanoBuf writer", () => {
 		writer.writeTypeId(1)
 		writer.writeFieldSize(0, 8)
 		expect([...writer.bytes]).toEqual([1, 0, 0, 0, 8, 0, 0, 0])
+	})
+
+	it("should write the given size of a field at the given offset in the buffer in little endian format", () => {
+		const writer = new NanoBufWriter(12)
+		writer.writeTypeId(4)
+		writer.writeFieldSize(0, 12)
+		writer.writeFieldSize(0, 10, 4)
+		expect([...writer.bytes]).toEqual([4, 0, 0, 0, 12, 0, 0, 0, 10, 0, 0, 0])
 	})
 
 	it("should append the given boolean to the end of the buffer", () => {
@@ -167,14 +176,10 @@ describe("NanoBuf writer", () => {
 		expect(writer.currentSize).toEqual(12)
 	})
 
-	it("should support length prefixing", () => {
-		const writer = new NanoBufWriter(12, true)
-		writer.writeTypeId(10)
-		writer.writeFieldSize(0, 4)
-		writer.appendInt32(123)
-		writer.writeLengthPrefix(12)
-		expect([...writer.bytes]).toEqual([
-			12, 0, 0, 0, 10, 0, 0, 0, 4, 0, 0, 0, 123, 0, 0, 0,
-		])
+	it("should allocate more bytes when asked", () => {
+		const writer = new NanoBufWriter(8)
+		expect(writer.bytes.length).toEqual(8)
+		writer.allocMore(10)
+		expect(writer.bytes.length).toEqual(18)
 	})
 })
