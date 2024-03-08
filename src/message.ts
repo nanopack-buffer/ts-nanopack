@@ -5,7 +5,7 @@ interface NanoPackMessage {
 
 	get headerSize(): number
 
-	writeTo(writer: NanoBufWriter): number
+	writeTo(writer: NanoBufWriter, offset: number): number
 
 	bytes(): Uint8Array
 }
