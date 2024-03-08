@@ -27,6 +27,10 @@ class NanoBufWriter {
 		this.endPtr += bytes
 	}
 
+	public writeUint32LE(uint32: number, offset: number = 0) {
+		this.buffer.writeUInt32LE(uint32, offset)
+	}
+
 	public writeTypeId(typeId: number, offset: number = 0) {
 		this.buffer.writeUInt32LE(typeId, offset)
 	}
