@@ -1,12 +1,12 @@
 class NanoBufReader {
-	private readonly buffer: Buffer
+	private readonly buffer: Buffer;
 
 	constructor(data: Uint8Array) {
-		this.buffer = Buffer.from(data)
+		this.buffer = Buffer.from(data);
 	}
 
 	public get bytes() {
-		return this.buffer
+		return this.buffer;
 	}
 
 	/**
@@ -19,7 +19,7 @@ class NanoBufReader {
 	 * @return A new {@link NanoBufReader} that has access to a slice of the buffer that backs this reader within the range [start, end).
 	 */
 	public newReaderAt(start: number, end?: number): NanoBufReader {
-		return new NanoBufReader(this.buffer.subarray(start, end))
+		return new NanoBufReader(this.buffer.subarray(start, end));
 	}
 
 	/**
@@ -30,52 +30,52 @@ class NanoBufReader {
 	 * @return a slice of the buffer that backs this reader.
 	 */
 	public slice(start: number, end?: number): Uint8Array {
-		return this.buffer.subarray(start, end)
+		return this.buffer.subarray(start, end);
 	}
 
-	public readTypeId(): number {
-		return this.buffer.readUint32LE(0)
+	public readTypeId(offset: number = 0): number {
+		return this.buffer.readUint32LE(offset);
 	}
 
-	public readFieldSize(fieldNumber: number): number {
-		return this.buffer.readInt32LE(4 * (fieldNumber + 1))
+	public readFieldSize(fieldNumber: number, offset: number = 0): number {
+		return this.buffer.readInt32LE(4 * (fieldNumber + 1) + offset);
 	}
 
 	public readBoolean(offset: number): boolean {
-		return this.buffer.readInt8(offset) === 1
+		return this.buffer.readInt8(offset) === 1;
 	}
 
 	public readInt8(offset: number): number {
-		return this.buffer.readInt8(offset)
+		return this.buffer.readInt8(offset);
 	}
 
 	public readUint8(offset: number): number {
-		return this.buffer.readUint8(offset)
+		return this.buffer.readUint8(offset);
 	}
 
 	public readInt32(offset: number): number {
-		return this.buffer.readInt32LE(offset)
+		return this.buffer.readInt32LE(offset);
 	}
 
 	public readUint32(offset: number): number {
-		return this.buffer.readUint32LE(offset)
+		return this.buffer.readUint32LE(offset);
 	}
 
 	public readInt64(offset: number): bigint {
-		return this.buffer.readBigInt64LE(offset)
+		return this.buffer.readBigInt64LE(offset);
 	}
 
 	public readUint64(offset: number): bigint {
-		return this.buffer.readBigUint64LE(offset)
+		return this.buffer.readBigUint64LE(offset);
 	}
 
 	public readDouble(offset: number): number {
-		return this.buffer.readDoubleLE(offset)
+		return this.buffer.readDoubleLE(offset);
 	}
 
 	public readString(offset: number, size: number): string {
-		return this.buffer.toString("utf-8", offset, offset + size)
+		return this.buffer.toString("utf-8", offset, offset + size);
 	}
 }
 
-export { NanoBufReader }
+export { NanoBufReader };
