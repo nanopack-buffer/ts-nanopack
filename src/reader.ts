@@ -1,8 +1,8 @@
 class NanoBufReader {
 	private readonly buffer: Buffer
 
-	constructor(data: Uint8Array) {
-		this.buffer = Buffer.from(data)
+	constructor(buffer: Buffer) {
+		this.buffer = buffer
 	}
 
 	public get bytes() {
