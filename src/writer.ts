@@ -7,8 +7,8 @@ class NanoBufWriter {
 	 */
 	private endPtr = 0
 
-	constructor(initialSizeInBytes: number) {
-		this.endPtr = initialSizeInBytes
+	constructor(initialSizeInBytes: number, withMessageHeader = true) {
+		this.endPtr = withMessageHeader ? initialSizeInBytes : 0
 		this.buffer = Buffer.allocUnsafe(initialSizeInBytes)
 	}
 
@@ -31,15 +31,15 @@ class NanoBufWriter {
 		this.endPtr += bytes
 	}
 
-	public writeUint32LE(uint32: number, offset: number = 0) {
+	public writeUint32LE(uint32: number, offset = 0) {
 		this.buffer.writeUInt32LE(uint32, offset)
 	}
 
-	public writeTypeId(typeId: number, offset: number = 0) {
+	public writeTypeId(typeId: number, offset = 0) {
 		this.buffer.writeUInt32LE(typeId, offset)
 	}
 
-	public writeFieldSize(fieldNumber: number, size: number, offset: number = 0) {
+	public writeFieldSize(fieldNumber: number, size: number, offset = 0) {
 		this.buffer.writeInt32LE(size, offset + 4 * (fieldNumber + 1))
 	}
 

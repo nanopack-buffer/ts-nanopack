@@ -1,8 +1,8 @@
 import { describe, expect, it } from "bun:test"
 import { NanoBufReader } from "../reader.js"
 
-function createArrayBuffer(bytes: number[]): Uint8Array {
-	return new Uint8Array(bytes)
+function createArrayBuffer(bytes: number[]): Buffer {
+	return Buffer.from(bytes)
 }
 
 describe("NanoBuf Reader", () => {
