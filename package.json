@@ -1,21 +1,25 @@
 {
-  "name": "nanopack",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js"
-    }
-  },
-  "types": "dist/index.d.ts",
-  "type": "module",
-  "scripts": {
-    "build": "tsc -p tsconfig.esm.json",
-    "prepare": "tsc -p tsconfig.esm.json"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.8.3",
-    "bun-types": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
-  }
+	"name": "nanopack",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"types": "dist/index.d.ts"
+		},
+		"./rpc": {
+			"import": "./dist/rpc/index.js",
+			"types": "./dist/rpc/index.d.ts"
+		}
+	},
+	"type": "module",
+	"scripts": {
+		"build": "tsc -p tsconfig.esm.json",
+		"prepare": "tsc -p tsconfig.esm.json"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.8.3",
+		"bun-types": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5.0.0"
+	}
 }
