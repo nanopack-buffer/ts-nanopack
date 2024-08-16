@@ -8,13 +8,13 @@ import type { RpcServerChannel } from "./rpc-channel.js"
  * @param requestReader The reader that can be used to read the RPC call info, including parameters.
  * @param offset The offset in requestReader where serialized arguments to the call starts.
  * @param msgId The ID of the RPC request message.
- * @returns serialized response to the RPC call.
+ * @returns serialized response to the RPC call, or null if failed to deserialize the request.
  */
 type RpcCallHandler = (
 	requestReader: NanoBufReader,
 	offset: number,
 	msgId: number,
-) => NanoBufWriter
+) => NanoBufWriter | null
 
 /**
  * RpcServer is responsible for registering RPC call handlers, as well as incoming RPC requests.
