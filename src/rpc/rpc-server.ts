@@ -1,5 +1,6 @@
 import type { NanoBufReader } from "../reader.js"
-import type { NanoBufWriter } from "../writer.js"
+import { NanoBufWriter } from "../writer.js"
+import { RpcMessageType } from "./message-type.js"
 import type { RpcServerChannel } from "./rpc-channel.js"
 
 /**
@@ -61,7 +62,15 @@ class RpcServer {
 			return
 		}
 		const responseData = handler(requestReader, 9 + methodNameLen, msgId)
-		this.channel.sendResponseData(responseData.bytes)
+		if (responseData) {
+			this.channel.sendResponseData(responseData.bytes)
+		} else {
+			const writer = new NanoBufWriter(6, false)
+			writer.appendUint8(RpcMessageType.RESPONSE)
+			writer.appendUint32(msgId)
+			writer.appendUint8(1)
+			this.channel.sendResponseData(writer.bytes)
+		}
 	}
 }
 
