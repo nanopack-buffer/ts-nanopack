@@ -17,7 +17,7 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 
 	sendRequestData(data: Uint8Array): void {
 		const sizeBuf = Buffer.allocUnsafe(4)
-		sizeBuf.writeUint32LE(data.length)
+		sizeBuf.writeUint32LE(data.byteLength)
 		process.stdout.write(sizeBuf)
 		process.stdout.write(data)
 	}
@@ -28,7 +28,7 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 
 	sendResponseData(data: Uint8Array): void {
 		const sizeBuf = Buffer.allocUnsafe(4)
-		sizeBuf.writeUint32LE(data.length)
+		sizeBuf.writeUint32LE(data.byteLength)
 		process.stdout.write(sizeBuf)
 		process.stdout.write(data)
 	}
