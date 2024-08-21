@@ -1,6 +1,6 @@
 enum RpcMessageType {
-	REQUEST = 0,
-	RESPONSE = 1,
+	REQUEST = 1,
+	RESPONSE = 2,
 }
 
 export { RpcMessageType }
