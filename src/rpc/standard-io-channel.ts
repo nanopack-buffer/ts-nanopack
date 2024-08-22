@@ -1,4 +1,3 @@
-import * as fs from "node:fs"
 import { NanoBufReader } from "../reader.js"
 import { RpcMessageType } from "./message-type.js"
 import type { RpcClientChannel, RpcServerChannel } from "./rpc-channel.js"
@@ -42,9 +41,11 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 	}
 
 	private async readStdin() {
-		const msgSizeData = Buffer.allocUnsafe(4)
 		while (!this.isClosed) {
-			fs.readSync(process.stdin.fd, msgSizeData, 0, 4, null)
+			await new Promise((resolve) => setTimeout(resolve, 1))
+
+			const msgSizeData: Buffer | null = process.stdin.read(4)
+			if (!msgSizeData) continue
 
 			const msgSize = msgSizeData.readUint32LE()
 			const msgData: Buffer | null = process.stdin.read(msgSize)
