@@ -31,9 +31,9 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 		this.requestHandler = requestHandler
 	}
 
-	open() {
+	open(): Promise<void> {
 		this.isClosed = false
-		this.readStdin()
+		return this.readStdin()
 	}
 
 	close() {
