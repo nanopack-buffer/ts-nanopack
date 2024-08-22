@@ -7,13 +7,7 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 	private responseHandler: ((responseReader: NanoBufReader) => void) | null =
 		null
 
-	private isSizeMessage = true
-
-	constructor() {
-		process.stdin.on("data", (buffer) => {
-			this.onStdinData(buffer)
-		})
-	}
+	private isClosed = false
 
 	sendRequestData(data: Uint8Array): void {
 		const sizeBuf = Buffer.allocUnsafe(4)
@@ -37,11 +31,27 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 		this.requestHandler = requestHandler
 	}
 
-	private onStdinData(buffer: Buffer) {
-		if (this.isSizeMessage) {
-			this.isSizeMessage = false
-		} else {
-			const reader = new NanoBufReader(buffer)
+	open() {
+		this.isClosed = false
+		this.readStdin()
+	}
+
+	close() {
+		this.isClosed = false
+	}
+
+	private async readStdin() {
+		while (!this.isClosed) {
+			await new Promise((resolve) => setTimeout(resolve, 1000 / 120))
+
+			const msgSizeData: Buffer | null = process.stdin.read(4)
+			if (!msgSizeData) continue
+
+			const msgSize = msgSizeData.readUint32LE()
+			const msgData: Buffer | null = process.stdin.read(msgSize)
+			if (!msgData) continue
+
+			const reader = new NanoBufReader(msgData)
 			const msgType = reader.readUint8(0)
 			switch (msgType) {
 				case RpcMessageType.REQUEST:
@@ -53,7 +63,6 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 				default:
 					break
 			}
-			this.isSizeMessage = true
 		}
 	}
 }
