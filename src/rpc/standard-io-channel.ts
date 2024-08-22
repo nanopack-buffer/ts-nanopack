@@ -41,8 +41,17 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 	}
 
 	private async readStdin() {
-		process.stdin.on("data", (buffer) => {
-			const reader = new NanoBufReader(buffer.subarray(4))
+		while (!this.isClosed) {
+			await new Promise((resolve) => setTimeout(resolve, 1))
+
+			const msgSizeData: Buffer | null = process.stdin.read(4)
+			if (!msgSizeData) continue
+
+			const msgSize = msgSizeData.readUint32LE()
+			const msgData: Buffer | null = process.stdin.read(msgSize)
+			if (!msgData) continue
+
+			const reader = new NanoBufReader(msgData)
 			const msgType = reader.readUint8(0)
 			switch (msgType) {
 				case RpcMessageType.REQUEST:
@@ -54,7 +63,7 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 				default:
 					break
 			}
-		})
+		}
 	}
 }
 
