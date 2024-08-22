@@ -53,6 +53,7 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 				default:
 					break
 			}
+			this.isSizeMessage = true
 		}
 	}
 }
