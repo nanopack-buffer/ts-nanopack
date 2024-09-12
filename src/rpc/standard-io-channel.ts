@@ -1,6 +1,7 @@
 import { NanoBufReader } from "../reader.js"
 import { RpcMessageType } from "./message-type.js"
 import type { RpcClientChannel, RpcServerChannel } from "./rpc-channel.js"
+import { readSync } from "node:fs"
 
 class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 	private requestHandler: ((requestReader: NanoBufReader) => void) | null = null
@@ -51,18 +52,20 @@ class NodeStandardIoRpcChannel implements RpcServerChannel, RpcClientChannel {
 			const msgData: Buffer | null = process.stdin.read(msgSize)
 			if (!msgData) continue
 
-			const reader = new NanoBufReader(msgData)
-			const msgType = reader.readUint8(0)
-			switch (msgType) {
-				case RpcMessageType.REQUEST:
-					this.requestHandler?.(reader)
-					break
-				case RpcMessageType.RESPONSE:
-					this.responseHandler?.(reader)
-					break
-				default:
-					break
-			}
+			new Promise(() => {
+				const reader = new NanoBufReader(msgData)
+				const msgType = reader.readUint8(0)
+				switch (msgType) {
+					case RpcMessageType.REQUEST:
+						this.requestHandler?.(reader)
+						break
+					case RpcMessageType.RESPONSE:
+						this.responseHandler?.(reader)
+						break
+					default:
+						break
+				}
+			})
 		}
 	}
 }
